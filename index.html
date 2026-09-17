@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise Dashboard - Semantic & Accessible Architecture</title>
+    <style>
+        /* Utility styling for screen readers & modal visibility */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        [aria-hidden="true"] {
+            display: none !important;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+        header[role="banner"] {
+            background-color: #1e293b;
+            color: #ffffff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        header nav ul {
+            display: flex;
+            list-style: none;
+            gap: 1.5rem;
+            margin: 0;
+            padding: 0;
+        }
+        header nav a {
+            color: #cbd5e1;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        header nav a[aria-current="page"] {
+            color: #38bdf8;
+            border-bottom: 2px solid #38bdf8;
+        }
+        .container {
+            display: flex;
+            min-height: calc(100vh - 120px);
+        }
+        aside {
+            width: 280px;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 1.5rem;
+        }
+        main {
+            flex: 1;
+            padding: 2rem;
+        }
+        fieldset {
+            border: 1px solid #cbd5e1;
+            border-radius: 0.375rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        legend {
+            font-weight: 600;
+            padding: 0 0.5rem;
+        }
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #cbd5e1;
+            border-radius: 0.375rem;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #2563eb;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            padding: 0.625rem;
+        }
+        button:hover {
+            background-color: #1d4ed8;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #ffffff;
+            border-radius: 0.375rem;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        th, td {
+            padding: 0.75rem 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+        caption {
+            caption-side: top;
+            text-align: left;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.5rem;
+            max-width: 500px;
+            width: 100%;
+        }
+        footer {
+            background: #0f172a;
+            color: #94a3b8;
+            padding: 1.5rem 2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Skip Navigation Link for Screen Readers -->
+    <a href="#main-content" class="sr-only">Skip to main content</a>
+
+    <!-- Top Navigation Header -->
+    <header role="banner">
+        <div>
+            <h1 style="margin:0; font-size:1.25rem;">Enterprise Metrics Dashboard</h1>
+        </div>
+        <nav aria-label="Main Navigation">
+            <ul>
+                <li><a href="#dashboard" aria-current="page">Dashboard</a></li>
+                <li><a href="#reports">Reports</a></li>
+                <li><a href="#settings">Settings</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Sidebar Layout Component -->
+        <aside aria-label="Sidebar Filters & Secondary Controls">
+            <section>
+                <h2 style="font-size:1.1rem; margin-top:0;">Filters</h2>
+                <form id="filter-form">
+                    <fieldset>
+                        <legend>Date Range</legend>
+                        <div class="form-group">
+                            <label for="start-date">Start Date:</label>
+                            <input type="date" id="start-date" name="start-date" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="end-date">End Date:</label>
+                            <input type="date" id="end-date" name="end-date" required>
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend>Status Options</legend>
+                        <div style="display:flex; gap:0.5rem; align-items:center; margin-bottom:0.5rem;">
+                            <input type="checkbox" id="status-active" name="status" value="active" style="width:auto;">
+                            <label for="status-active" style="margin:0;">Active</label>
+                        </div>
+                        <div style="display:flex; gap:0.5rem; align-items:center;">
+                            <input type="checkbox" id="status-pending" name="status" value="pending" style="width:auto;">
+                            <label for="status-pending" style="margin:0;">Pending</label>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit">Apply Filters</button>
+                </form>
+            </section>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main id="main-content" tabindex="-1">
+            <header style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; background:transparent; padding:0; color:inherit;">
+                <h2 style="margin:0;">Overview & Data Tables</h2>
+                <button type="button" style="width:auto;" aria-haspopup="dialog" aria-controls="user-modal" onclick="document.getElementById('user-modal').setAttribute('aria-hidden', 'false')">
+                    + Add New User
+                </button>
+            </header>
+
+            <!-- Main Data Article/Component -->
+            <article>
+                <h3 style="margin-top:0;">System Performance Metrics</h3>
+                <p>Real-time analytics and user system utilization data.</p>
+
+                <!-- Accessible Data Table -->
+                <table aria-describedby="table-desc">
+                    <caption id="table-desc">Active User Activity Logs for the Current Fiscal Quarter</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">User ID</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>#1001</td>
+                            <td>Alex Johnson</td>
+                            <td>Administrator</td>
+                            <td><span style="color:#16a34a; font-weight:600;">Active</span></td>
+                        </tr>
+                        <tr>
+                            <td>#1002</td>
+                            <td>Maria Garcia</td>
+                            <td>Data Analyst</td>
+                            <td><span style="color:#d97706; font-weight:600;">Pending</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </article>
+        </main>
+    </div>
+
+    <!-- Accessible Modal Dialog Component -->
+    <div id="user-modal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" aria-hidden="true">
+        <div class="modal-content" role="document">
+            <header style="display:flex; justify-content:space-between; align-items:center; background:transparent; padding:0 0 1rem 0; color:inherit;">
+                <h2 id="modal-title" style="margin:0;">Create New User</h2>
+                <button type="button" aria-label="Close dialog" style="width:auto; background:none; color:#000; font-size:1.5rem; border:none; cursor:pointer;" onclick="document.getElementById('user-modal').setAttribute('aria-hidden', 'true')">&times;</button>
+            </header>
+            
+            <form id="add-user-form">
+                <div class="form-group">
+                    <label for="user-fullname">Full Name (Required):</label>
+                    <input type="text" id="user-fullname" name="fullname" required aria-required="true" autocomplete="name">
+                </div>
+
+                <div class="form-group">
+                    <label for="user-email">Email Address (Required):</label>
+                    <input type="email" id="user-email" name="email" required aria-required="true" autocomplete="email">
+                </div>
+
+                <div class="form-group">
+                    <label for="user-role">Assigned Role:</label>
+                    <select id="user-role" name="role" required>
+                        <option value="">-- Please Select a Role --</option>
+                        <option value="admin">Administrator</option>
+                        <option value="editor">Editor</option>
+                        <option value="viewer">Viewer</option>
+                    </select>
+                </div>
+
+                <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+                    <button type="submit">Submit</button>
+                    <button type="button" style="background:#64748b;" onclick="document.getElementById('user-modal').setAttribute('aria-hidden', 'true')">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Page Footer -->
+    <footer role="contentinfo">
+        <p style="margin:0 0 0.5rem 0;">&copy; 2026 Enterprise Dashboard. All rights reserved.</p>
+        <nav aria-label="Footer Links">
+            <ul style="display:flex; justify-content:center; gap:1rem; list-style:none; padding:0; margin:0;">
+                <li><a href="#privacy" style="color:#94a3b8; text-decoration:none;">Privacy Policy</a></li>
+                <li><a href="#terms" style="color:#94a3b8; text-decoration:none;">Terms of Service</a></li>
+            </ul>
+        </nav>
+    </footer>
+
+</body>
+</html>
